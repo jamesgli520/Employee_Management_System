@@ -2,6 +2,7 @@
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
 const table = require("console.table");
+const { exit } = require('process');
 
 const PORT = 3306;
 
@@ -58,10 +59,11 @@ function init(){
                     viewAllEmployee();
                     break;   
                 case 'update an employee role':
-                    updateEmployeeRole();
+                    viewNUpdateRole();
                     break;      
                 default:
                     console.log('Exit Successful!');
+                    exit();
             }
     })
     
@@ -178,7 +180,7 @@ function init(){
         });
     }
 
-    function viewAllDepartment(){
+    async function viewAllDepartment(){
         db.query(`SELECT * FROM department`, function (err, res) {
             if (err) throw err;
             console.table(res);
@@ -186,7 +188,7 @@ function init(){
         });
     }
     
-    function viewAllRoles(){
+    async function viewAllRoles(){
         db.query(`SELECT * FROM roles`, function (err, res) {
             if (err) throw err;
             console.table(res);
@@ -194,7 +196,7 @@ function init(){
         });
     }
 
-    function viewAllEmployee(){
+    async function viewAllEmployee(){
         db.query(`SELECT * FROM employee`, function (err, res) {
             if (err) throw err;
             console.table(res);
@@ -202,12 +204,20 @@ function init(){
         });
     }
 
-    function updateEmployeeRole(){
+    async function viewNUpdateRole(){
+        db.query(`SELECT * FROM roles`, function (err, res) {
+            if (err) throw err;
+            console.table(res);
+            updateEmployeeRole();
+        });
+    }
+
+    async function updateEmployeeRole(){
         inquirer.prompt([
             {
                 type: "input",
                 name: "roleID",
-                message: "Enter the role ID that you want to update: ",
+                message: "Enter the role ID that you want to update the role: ",
             },
             {
                 type: "input",
@@ -226,6 +236,7 @@ function init(){
                     
                     db.query(`SELECT * FROM roles`, function (err, res) {
                         if (err) throw err;
+                        console.log('Updated Successfully')
                         console.table(res);
                         init(); 
                     });
