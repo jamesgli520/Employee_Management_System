@@ -83,14 +83,18 @@ function init(){
     
         ]).then( (userInput) => {
                 // Insert a new data into the db
-                db.query(`INSERT INTO department VALUES (${userInput.departmentId}, '${userInput.departmentName}')`), (err) =>{
+                
+                    db.query((`INSERT INTO department VALUES (${userInput.departmentId}, '${userInput.departmentName}')`), function (err){
                     //Throw error is found duplicate
-                    if (err){
-                        throw err; 
-                    } 
-                }
-                console.log(`Department ID: ${userInput.departmentId} and Department Name: ${userInput.departmentName} was added successfully to database!`);; 
-                init(); 
+                        if(err){
+                            throw err;
+                        }else{
+                            console.log(`Department ID: ${userInput.departmentId} and Department Name: ${userInput.departmentName} was added successfully to database!`);
+                            init()
+                        }
+                    
+                    })
+               
         });
     }
 
@@ -122,15 +126,17 @@ function init(){
     
         ]).then( (userInput) => {
                 // Insert a new data into the db
-                db.query(`INSERT INTO roles VALUES (${userInput.roleId}, '${userInput.employeeTitle}', ${userInput.salary} , ${userInput.departmentId})`), (err) =>{
+                db.query((`INSERT INTO roles VALUES (${userInput.roleId}, '${userInput.employeeTitle}', ${userInput.salary} , ${userInput.departmentId})`), (err) =>{
                     //Throw error is found duplicate
                     if (err){
                         throw err; 
-                    } 
-                }
-                console.log(`Role ID: ${userInput.roleId}, Employee Title: ${userInput.employeeTitle}, Salary: ${userInput.salary} and Department ID: ${userInput.departmentId}
+                    }else{
+                       console.log(`Role ID: ${userInput.roleId}, Employee Title: ${userInput.employeeTitle}, Salary: ${userInput.salary} and Department ID: ${userInput.departmentId}
                 was added successfully to database!`);; 
                 init(); 
+                    } 
+                })
+                 
         });
     }
 
@@ -168,21 +174,26 @@ function init(){
     
         ]).then( (userInput) => {
                 // Insert a new data into the db
-                db.query(`INSERT INTO employee VALUES (${userInput.employeeId}, '${userInput.firstName}', '${userInput.lastName}' , ${userInput.roleID} , ${userInput.managerID})`), (err) =>{
+                db.query((`INSERT INTO employee VALUES (${userInput.employeeId}, '${userInput.firstName}', '${userInput.lastName}' , ${userInput.roleID} , ${userInput.managerID})`), (err) =>{
                     //Throw error is found duplicate
                     if (err){
                         throw err; 
                     } 
-                }
-                console.log(`Employee ID: ${userInput.employeeId}, Employee First Name: ${userInput.firstName}, Employee Last Name: ${userInput.lastName}, 
-                Role ID: ${userInput.roleID} and Manager ID: ${userInput.managerID} was added successfully to database!`);; 
-                init(); 
+                    else{
+                        console.log(`Employee ID: ${userInput.employeeId}, Employee First Name: ${userInput.firstName}, Employee Last Name: ${userInput.lastName}, 
+                        Role ID: ${userInput.roleID} and Manager ID: ${userInput.managerID} was added successfully to database!`);; 
+                        init(); 
+                    }
+                })
+                 
         });
     }
 
     async function viewAllDepartment(){
         db.query(`SELECT * FROM department`, function (err, res) {
-            if (err) throw err;
+            if(err){
+                throw err;
+            } 
             console.table(res);
             init(); 
         });
@@ -190,7 +201,9 @@ function init(){
     
     async function viewAllRoles(){
         db.query(`SELECT * FROM roles`, function (err, res) {
-            if (err) throw err;
+            if(err){
+                throw err;
+            } 
             console.table(res);
             init(); 
         });
@@ -198,7 +211,9 @@ function init(){
 
     async function viewAllEmployee(){
         db.query(`SELECT * FROM employee`, function (err, res) {
-            if (err) throw err;
+            if(err){
+              throw err;  
+            } 
             console.table(res);
             init(); 
         });
@@ -206,7 +221,9 @@ function init(){
 
     async function viewNUpdateRole(){
         db.query(`SELECT * FROM roles`, function (err, res) {
-            if (err) throw err;
+            if(err){
+              throw err;  
+            } 
             console.table(res);
             updateEmployeeRole();
         });
@@ -232,7 +249,9 @@ function init(){
         ]).then( (userInput) => {
                 db.query(`UPDATE roles SET employee_title = '${userInput.newTitle}', employee_salary = ${userInput.newSalary} WHERE role_id = ${userInput.roleID}`, 
                 function (err) {
-                    if (err) throw err;
+                    if(err){
+                       throw err; 
+                    } 
                     
                     db.query(`SELECT * FROM roles`, function (err, res) {
                         if (err) throw err;
